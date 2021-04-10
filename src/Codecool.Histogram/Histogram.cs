@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,6 +12,9 @@ namespace Codecool.Histogram
     public class Histogram
     {
         private Dictionary<Range, int> _histogram;
+        public int MaxValue => _histogram.Values.Max();
+        public int MinValue => _histogram.Values.Min();
+        
         public Histogram()
         {
             _histogram = new Dictionary<Range, int>();
@@ -99,7 +103,15 @@ namespace Codecool.Histogram
         /// </summary>
         public void NormalizeValues()
         {
-            // TODO: Implement normalization method
+            var min = MinValue;
+            var max = MaxValue;
+            
+            foreach (var (key, value) in _histogram.ToArray())
+            {
+                var normalizeValue = (value - min) * 100 / (max - min);
+                _histogram[key] = normalizeValue;
+            }
+            
         }
 
         /// <summary>
@@ -119,5 +131,7 @@ namespace Codecool.Histogram
             }
             return resultBuilder.ToString();
         }
+        
+        
     }
 }
